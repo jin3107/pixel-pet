@@ -22,8 +22,8 @@ app.commandLine.appendSwitch('js-flags', '--max-old-space-size=48');
 const PET_W = 100;
 const PET_H = 68;
 // Transparent rows under each sprite's feet inside the 68px window; the pad pushes the window below the work area
-// so the feet land on the taskbar edge (measured per model: clawd ~5px, cat ~18px, sheep ~18px).
-const GROUND_PAD_BY_MODEL = { clawd: 4, cat: 17, sheep: 18 };
+// so the feet land on the taskbar edge. All three sprites stand on y=55 of the same viewBox, so the pad is shared.
+const GROUND_PAD_BY_MODEL = { clawd: 4, cat: 4, sheep: 4 };
 const WALK_SPEED = 1.6;
 const SURF_SPEED = 4.5;
 const CLIMB_SPEED = 1.2;

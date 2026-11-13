@@ -371,313 +371,285 @@
     </g>
   </script>
 
-  <!-- ═══════════════════════════════════════════════════════
-       TEMPLATE: MÈO
-       Hand-drawn pixel art (Piskel, 48×48) — whole body incl. legs is one
-       static <image>, so .leg/.arm-l/.arm-r/#eyes-* rules in states.css
-       simply match nothing now (harmless no-op). #bob-group's
-       translateY/rotate/scaleY still animates the whole image.
+          <!-- ═══════════════════════════════════════════════════════
+       TEMPLATE: MÈO — hand-placed pixel rects like Clawd (7.5-unit cells, feet on y=55, faces right, centred on x=40).
+       What the CSS drives: .leg-a/.leg-b (trot), .paw (front paw swipe), .tail (tip flick), .eye + #eyes-n/-h/-x,
+       #hearts, #think-bubble, #parachute, #butterfly.
   ═══════════════════════════════════════════════════════ -->
   <script type="text/svg-template" id="tpl-cat">
     <g id="flip-group">
       <g id="bob-group">
-        <g id="hearts" fill="#E06C9F">
-          <g class="heart heart-1">
-            <rect x="14" y="-14" width="3" height="3"/>
-            <rect x="20" y="-14" width="3" height="3"/>
-            <rect x="14" y="-11" width="9" height="3"/>
-            <rect x="17" y="-8" width="3" height="3"/>
-          </g>
-          <g class="heart heart-2">
-            <rect x="52" y="-12" width="3" height="3"/>
-            <rect x="58" y="-12" width="3" height="3"/>
-            <rect x="52" y="-9" width="9" height="3"/>
-            <rect x="55" y="-6" width="3" height="3"/>
-          </g>
-        </g>
-
-        <!-- The painted sprite already has legs (bottom band) and a tail
-             (top-right notch, rows 11-22 of the source PNG) — cut both out
-             of the base image so the animated pieces below don't double up. -->
-        <image href="img/cat.png" x="-10" y="-45" width="100" height="100" style="image-rendering:pixelated; clip-path: polygon(0 0, 100px 0, 100px 20.83px, 79.17px 20.83px, 79.17px 47.92px, 100px 47.92px, 100px 66.67px, 0 66.67px);"/>
-
-        <!-- transform-origin overrides the shared "0 40px" from base.css
-             (tuned for Clawd's legs) — cat legs sit higher, so rotate-based
-             animations (e.g. held's dangle) need the pivot at their own hip. -->
-        <g fill="#E8A258">
-          <rect class="leg leg-a" x="13.96" y="21.7" width="6.25" height="11" style="transform-origin: 17.09px 21.7px;"/>
-          <rect class="leg leg-b" x="26.46" y="21.7" width="6.25" height="11" style="transform-origin: 29.59px 21.7px;"/>
-          <rect class="leg leg-a" x="38.96" y="21.7" width="6.25" height="11" style="transform-origin: 42.09px 21.7px;"/>
-          <rect class="leg leg-b" x="51.46" y="21.7" width="6.25" height="11" style="transform-origin: 54.59px 21.7px;"/>
-        </g>
-        <g fill="#F5EDE0">
-          <rect class="leg leg-a" x="13.96" y="29.7" width="6.25" height="3" style="transform-origin: 17.09px 21.7px;"/>
-          <rect class="leg leg-b" x="26.46" y="29.7" width="6.25" height="3" style="transform-origin: 29.59px 21.7px;"/>
-          <rect class="leg leg-a" x="38.96" y="29.7" width="6.25" height="3" style="transform-origin: 42.09px 21.7px;"/>
-          <rect class="leg leg-b" x="51.46" y="29.7" width="6.25" height="3" style="transform-origin: 54.59px 21.7px;"/>
-        </g>
-
-        <!-- Real tail cropped out of the same PNG (the notch cut above),
-             wrapped separately so it can rotate on its own from the base. -->
-        <g class="tail" style="transform-origin: 75px 3px;">
-          <image href="img/cat.png" x="-10" y="-45" width="100" height="100" style="image-rendering:pixelated; clip-path: inset(20.83px 0 52.08px 79.17px);"/>
-        </g>
-
-        <g id="parachute">
-          <rect x="28" y="-70" width="24" height="6" fill="#D9835F"/>
-          <rect x="10" y="-64" width="19" height="6" fill="#F2D9B8"/>
-          <rect x="29" y="-64" width="22" height="6" fill="#D9835F"/>
-          <rect x="51" y="-64" width="19" height="6" fill="#F2D9B8"/>
-          <rect x="-5" y="-58" width="12" height="7" fill="#D9835F"/>
-          <rect x="7"  y="-58" width="22" height="7" fill="#F2D9B8"/>
-          <rect x="29" y="-58" width="22" height="7" fill="#D9835F"/>
-          <rect x="51" y="-58" width="22" height="7" fill="#F2D9B8"/>
-          <rect x="73" y="-58" width="12" height="7" fill="#D9835F"/>
-          <rect x="-15" y="-51" width="22" height="7" fill="#D9835F"/>
-          <rect x="7"   y="-51" width="22" height="7" fill="#F2D9B8"/>
-          <rect x="29"  y="-51" width="22" height="7" fill="#D9835F"/>
-          <rect x="51"  y="-51" width="22" height="7" fill="#F2D9B8"/>
-          <rect x="73"  y="-51" width="22" height="7" fill="#D9835F"/>
-          <rect x="-15" y="-44" width="110" height="2" fill="#8B5A3C"/>
-          <g fill="#55555C">
-            <rect x="-11" y="-42" width="2" height="12"/>
-            <rect x="-6"  y="-30" width="2" height="14"/>
-            <rect x="0"   y="-16" width="2" height="16"/>
-            <rect x="89" y="-42" width="2" height="12"/>
-            <rect x="84" y="-30" width="2" height="14"/>
-            <rect x="78" y="-16" width="2" height="16"/>
+        <g transform="translate(18 -2)">
+          <g id="hearts" fill="#E06C9F">
+            <g class="heart heart-1">
+              <rect x="14" y="-14" width="3" height="3"/>
+              <rect x="20" y="-14" width="3" height="3"/>
+              <rect x="14" y="-11" width="9" height="3"/>
+              <rect x="17" y="-8" width="3" height="3"/>
+            </g>
+            <g class="heart heart-2">
+              <rect x="52" y="-12" width="3" height="3"/>
+              <rect x="58" y="-12" width="3" height="3"/>
+              <rect x="52" y="-9" width="9" height="3"/>
+              <rect x="55" y="-6" width="3" height="3"/>
+            </g>
           </g>
         </g>
-
-        <g id="ball">
-          <rect x="68" y="8" width="7.5" height="7.5" fill="#ECECEC"/>
-          <rect x="75.5" y="8" width="7.5" height="7.5" fill="#242320"/>
-          <rect x="68" y="15.5" width="7.5" height="7.5" fill="#242320"/>
-          <rect x="75.5" y="15.5" width="7.5" height="7.5" fill="#ECECEC"/>
-        </g>
-
-        <g id="laptop">
-          <g fill="#6E7987">
-            <rect x="86"   y="46" width="28" height="5"/>
-            <rect x="87.5" y="41" width="28" height="5"/>
-            <rect x="89"   y="36" width="28" height="5"/>
-            <rect x="90.5" y="31" width="28" height="5"/>
-            <rect x="92"   y="26" width="28" height="5"/>
-            <rect x="93.5" y="21" width="28" height="5"/>
-          </g>
-          <g fill="#F2F2F2">
-            <rect x="95" y="35" width="3" height="3"/>
-            <rect x="98" y="32" width="3" height="3"/>
-            <rect x="98" y="38" width="3" height="3"/>
-            <rect x="102" y="38" width="3" height="3"/>
-            <rect x="104" y="35" width="3" height="3"/>
-            <rect x="106" y="32" width="3" height="3"/>
-            <rect x="110" y="32" width="3" height="3"/>
-            <rect x="110" y="38" width="3" height="3"/>
-            <rect x="113" y="35" width="3" height="3"/>
-          </g>
-          <rect x="64" y="51" width="46" height="4" fill="#5B6B7A"/>
-          <g fill="#7C8CA0">
-            <rect x="66" y="52" width="4" height="2"/>
-            <rect x="72" y="52" width="4" height="2"/>
-            <rect x="78" y="52" width="4" height="2"/>
-            <rect x="84" y="52" width="4" height="2"/>
-            <rect x="90" y="52" width="4" height="2"/>
-            <rect x="96" y="52" width="4" height="2"/>
-            <rect x="102" y="52" width="4" height="2"/>
-          </g>
-        </g>
-
-        <g id="headphones">
-          <rect x="8" y="-2" width="64" height="6" fill="#3B3B42"/>
-          <rect x="2" y="4" width="10" height="14" fill="#A9CDC7"/>
-          <rect x="68" y="4" width="10" height="14" fill="#A9CDC7"/>
-        </g>
-        <g id="dj-table">
-          <rect x="6" y="34" width="68" height="6" fill="#55555C"/>
-          <rect x="16" y="26" width="14" height="10" fill="#3B7FC4"/>
-          <rect x="50" y="26" width="14" height="10" fill="#ECECEC"/>
-        </g>
-        <g id="notes">
-          <g class="note note-1" fill="#3B3B42">
-            <rect x="76" y="-4" width="2" height="9"/>
-            <rect x="72" y="2" width="4" height="4"/>
-            <rect x="76" y="-4" width="5" height="2"/>
+        <!-- the canopy hangs from the cat's back (y=17.5), not from Clawd's torso top; stretched 1.2x vertically so it
+             still clears the ears -->
+        <g transform="translate(0 17.5) scale(1 1.2)">
+          <g id="parachute" shape-rendering="crispEdges">
+          <g class="chute-body">
+            <rect x="18" y="-54" width="12.8" height="6" fill="#F2D9B8"/>
+            <rect x="30.8" y="-54" width="18.4" height="6" fill="#D87656"/>
+            <rect x="49.2" y="-54" width="12.8" height="6" fill="#F2D9B8"/>
+            <rect x="4" y="-48" width="8.4" height="6" fill="#D87656"/>
+            <rect x="12.4" y="-48" width="18.4" height="6" fill="#F2D9B8"/>
+            <rect x="30.8" y="-48" width="18.4" height="6" fill="#D87656"/>
+            <rect x="49.2" y="-48" width="18.4" height="6" fill="#F2D9B8"/>
+            <rect x="67.6" y="-48" width="8.4" height="6" fill="#D87656"/>
+            <rect x="-6" y="-42" width="18.4" height="6" fill="#D87656"/>
+            <rect x="12.4" y="-42" width="18.4" height="6" fill="#F2D9B8"/>
+            <rect x="30.8" y="-42" width="18.4" height="6" fill="#D87656"/>
+            <rect x="49.2" y="-42" width="18.4" height="6" fill="#F2D9B8"/>
+            <rect x="67.6" y="-42" width="18.4" height="6" fill="#D87656"/>
+            <rect x="-4.5" y="-36" width="15.4" height="4" fill="#D87656"/>
+            <rect x="13.9" y="-36" width="15.4" height="4" fill="#F2D9B8"/>
+            <rect x="32.3" y="-36" width="15.4" height="4" fill="#D87656"/>
+            <rect x="50.7" y="-36" width="15.4" height="4" fill="#F2D9B8"/>
+            <rect x="69.1" y="-36" width="15.4" height="4" fill="#D87656"/>
+            <g>
+            <rect x="-4.4" y="-32" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="0.6" y="-24.25" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="5.6" y="-16.5" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="10.6" y="-8.75" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="13" y="-32" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="16" y="-24.25" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="19" y="-16.5" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="22" y="-8.75" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="30.4" y="-32" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="31.4" y="-24.25" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="32.4" y="-16.5" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="33.4" y="-8.75" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="47.8" y="-32" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="46.8" y="-24.25" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="45.8" y="-16.5" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="44.8" y="-8.75" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="65.2" y="-32" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="62.2" y="-24.25" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="59.2" y="-16.5" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="56.2" y="-8.75" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="82.6" y="-32" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="77.6" y="-24.25" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="72.6" y="-16.5" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="67.6" y="-8.75" width="1.8" height="8.25" fill="#7B7B84"/>
+            </g>
           </g>
         </g>
-        <g id="cup">
-          <g id="steam" fill="#ABABAB">
-            <rect x="76" y="1" width="1.5" height="3"/>
-            <rect x="77.5" y="-2" width="1.5" height="3"/>
-            <rect x="82" y="1" width="1.5" height="3"/>
-            <rect x="80.5" y="-2" width="1.5" height="3"/>
+        </g>
+        <g shape-rendering="crispEdges">
+          <!-- tail: a hooked column behind the rump; only the dark tip (.tail) flicks -->
+          <rect x="-5" y="2.5" width="7.5" height="30" fill="#E8A258"/>
+          <rect x="2.5" y="25" width="7.5" height="7.5" fill="#E8A258"/>
+          <rect x="-5" y="17.5" width="7.5" height="3.75" fill="#C7803A"/>
+          <rect class="tail" x="2.5" y="2.5" width="7.5" height="7.5" fill="#C7803A"/>
+          <!-- legs go up under the body so a swinging leg never leaves a gap -->
+          <g class="leg leg-b" style="transform-origin: 13.75px 40px;">
+            <rect x="10" y="35" width="7.5" height="12.5" fill="#E8A258"/>
+            <rect x="10" y="47.5" width="7.5" height="7.5" fill="#F5EDE0"/>
           </g>
-          <rect x="74" y="7" width="12" height="10" fill="#F2E9DC"/>
-          <rect x="76" y="7" width="8" height="2" fill="#4A2E1E"/>
-          <rect x="86" y="9" width="4" height="1.5" fill="#F2E9DC"/>
-          <rect x="88.5" y="9" width="1.5" height="5" fill="#F2E9DC"/>
-          <rect x="86" y="12.5" width="4" height="1.5" fill="#F2E9DC"/>
+          <g class="leg leg-a" style="transform-origin: 28.75px 40px;">
+            <rect x="25" y="35" width="7.5" height="12.5" fill="#E8A258"/>
+            <rect x="25" y="47.5" width="7.5" height="7.5" fill="#F5EDE0"/>
+          </g>
+          <g class="leg leg-b" style="transform-origin: 43.75px 40px;">
+            <rect x="40" y="35" width="7.5" height="12.5" fill="#E8A258"/>
+            <rect x="40" y="47.5" width="7.5" height="7.5" fill="#F5EDE0"/>
+          </g>
+          <g class="leg leg-a paw" style="transform-origin: 58.75px 40px;">
+            <rect x="55" y="35" width="7.5" height="12.5" fill="#E8A258"/>
+            <rect x="55" y="47.5" width="7.5" height="7.5" fill="#F5EDE0"/>
+          </g>
+          <rect x="10" y="17.5" width="52.5" height="22.5" fill="#E8A258"/>
+          <rect x="17.5" y="32.5" width="37.5" height="7.5" fill="#F5EDE0"/>
+          <rect x="17.5" y="17.5" width="7.5" height="15" fill="#C7803A"/>
+          <rect x="32.5" y="17.5" width="7.5" height="15" fill="#C7803A"/>
+          <!-- head -->
+          <rect x="47.5" y="2.5" width="37.5" height="22.5" fill="#E8A258"/>
+          <rect x="47.5" y="-5" width="7.5" height="7.5" fill="#E8A258"/>
+          <rect x="77.5" y="-5" width="7.5" height="7.5" fill="#E8A258"/>
+          <rect x="49.4" y="-2.5" width="3.75" height="5" fill="#E8A0A0"/>
+          <rect x="79.4" y="-2.5" width="3.75" height="5" fill="#E8A0A0"/>
+          <rect x="62.5" y="2.5" width="7.5" height="5" fill="#C7803A"/>
+          <rect x="55" y="17.5" width="22.5" height="7.5" fill="#F5EDE0"/>
+          <rect x="63.75" y="17.5" width="5" height="3.75" fill="#E06C9F"/>
         </g>
-        <g id="think-bubble" fill="#F2F2F2">
-          <rect x="30" y="-28" width="20" height="14"/>
-          <rect x="26" y="-24" width="6" height="6"/>
-          <rect x="50" y="-24" width="6" height="6"/>
-          <rect x="34" y="-10" width="4" height="4"/>
-          <rect x="27" y="-4" width="3" height="3"/>
+        <g id="eyes-n">
+          <rect class="eye" x="56.25" y="10" width="5" height="7.5" fill="#000000"/>
+          <rect class="eye" x="71.25" y="10" width="5" height="7.5" fill="#000000"/>
         </g>
+        <g id="eyes-h" fill="#000000">
+          <rect x="53.125" y="13.75" width="3.75" height="3.75"/><rect x="56.875" y="10" width="3.75" height="3.75"/><rect x="60.625" y="13.75" width="3.75" height="3.75"/>
+          <rect x="68.125" y="13.75" width="3.75" height="3.75"/><rect x="71.875" y="10" width="3.75" height="3.75"/><rect x="75.625" y="13.75" width="3.75" height="3.75"/>
+        </g>
+        <g id="eyes-x" fill="#000000">
+          <rect x="53.125" y="9" width="3.75" height="3.75"/><rect x="60.625" y="9" width="3.75" height="3.75"/><rect x="56.875" y="12.75" width="3.75" height="3.75"/><rect x="53.125" y="16.5" width="3.75" height="3.75"/><rect x="60.625" y="16.5" width="3.75" height="3.75"/>
+          <rect x="68.125" y="9" width="3.75" height="3.75"/><rect x="75.625" y="9" width="3.75" height="3.75"/><rect x="71.875" y="12.75" width="3.75" height="3.75"/><rect x="68.125" y="16.5" width="3.75" height="3.75"/><rect x="75.625" y="16.5" width="3.75" height="3.75"/>
+        </g>
+        <g transform="translate(24 0)">
+          <g id="think-bubble" fill="#F2F2F2">
+            <rect x="30" y="-28" width="20" height="14"/>
+            <rect x="26" y="-24" width="6" height="6"/>
+            <rect x="50" y="-24" width="6" height="6"/>
+            <rect x="34" y="-10" width="4" height="4"/>
+            <rect x="27" y="-4" width="3" height="3"/>
+          </g>
+        </g>
+        <!-- in front of the cat (it faces right) -->
         <g id="butterfly">
-          <rect x="-10" y="-21" width="2" height="8" fill="#3B3B42"/>
-          <rect class="wing wing-l" x="-15" y="-20" width="5" height="6" fill="#B79FE0" style="transform-origin: -10px -17px;"/>
-          <rect class="wing wing-r" x="-8" y="-20" width="5" height="6" fill="#8FC9E0" style="transform-origin: -8px -17px;"/>
+          <rect x="97" y="-13" width="2" height="8" fill="#3B3B42"/>
+          <rect class="wing wing-l" x="92" y="-12" width="5" height="6" fill="#B79FE0" style="transform-origin: 97px -9px;"/>
+          <rect class="wing wing-r" x="99" y="-12" width="5" height="6" fill="#8FC9E0" style="transform-origin: 99px -9px;"/>
         </g>
-        <rect id="head-zone" x="-10" y="-45" width="100" height="50" fill="transparent" pointer-events="all"/>
-      </g>
-      <g id="board">
-        <rect x="-6" y="52" width="92" height="8" fill="#C15F8B"/>
-        <rect x="-6" y="52" width="92" height="3" fill="#D488AC"/>
+        <rect id="head-zone" x="47.5" y="-5" width="37.5" height="30" fill="transparent" pointer-events="all"/>
       </g>
     </g>
   </script>
 
   <!-- ═══════════════════════════════════════════════════════
-       TEMPLATE: CỪU — same layout, different image
+       TEMPLATE: CỪU — same grid and conventions as the cat (feet on y=55, faces right, centred on x=40), no tail.
   ═══════════════════════════════════════════════════════ -->
   <script type="text/svg-template" id="tpl-sheep">
     <g id="flip-group">
       <g id="bob-group">
-        <g id="hearts" fill="#E06C9F">
-          <g class="heart heart-1">
-            <rect x="14" y="-14" width="3" height="3"/>
-            <rect x="20" y="-14" width="3" height="3"/>
-            <rect x="14" y="-11" width="9" height="3"/>
-            <rect x="17" y="-8" width="3" height="3"/>
-          </g>
-          <g class="heart heart-2">
-            <rect x="52" y="-12" width="3" height="3"/>
-            <rect x="58" y="-12" width="3" height="3"/>
-            <rect x="52" y="-9" width="9" height="3"/>
-            <rect x="55" y="-6" width="3" height="3"/>
-          </g>
-        </g>
-
-        <!-- Bottom 35.6px of the sprite is the painted-on hooves; clip them
-             off so they don't double up with the animated rect legs below. -->
-        <image href="img/sheep.png" x="-17" y="-59" width="114" height="114" style="image-rendering:pixelated; clip-path: inset(0 0 35.6px 0);"/>
-
-        <g fill="#4B4B4B">
-          <rect class="leg leg-a" x="13.87" y="19.4" width="7.1" height="12" style="transform-origin: 17.42px 19.4px;"/>
-          <rect class="leg leg-b" x="28.13" y="19.4" width="7.1" height="12" style="transform-origin: 31.68px 19.4px;"/>
-          <rect class="leg leg-a" x="42.37" y="19.4" width="7.1" height="12" style="transform-origin: 45.92px 19.4px;"/>
-          <rect class="leg leg-b" x="56.63" y="19.4" width="7.1" height="12" style="transform-origin: 60.18px 19.4px;"/>
-        </g>
-
-        <g id="parachute">
-          <rect x="28" y="-70" width="24" height="6" fill="#D9835F"/>
-          <rect x="10" y="-64" width="19" height="6" fill="#F2D9B8"/>
-          <rect x="29" y="-64" width="22" height="6" fill="#D9835F"/>
-          <rect x="51" y="-64" width="19" height="6" fill="#F2D9B8"/>
-          <rect x="-5" y="-58" width="12" height="7" fill="#D9835F"/>
-          <rect x="7"  y="-58" width="22" height="7" fill="#F2D9B8"/>
-          <rect x="29" y="-58" width="22" height="7" fill="#D9835F"/>
-          <rect x="51" y="-58" width="22" height="7" fill="#F2D9B8"/>
-          <rect x="73" y="-58" width="12" height="7" fill="#D9835F"/>
-          <rect x="-15" y="-51" width="22" height="7" fill="#D9835F"/>
-          <rect x="7"   y="-51" width="22" height="7" fill="#F2D9B8"/>
-          <rect x="29"  y="-51" width="22" height="7" fill="#D9835F"/>
-          <rect x="51"  y="-51" width="22" height="7" fill="#F2D9B8"/>
-          <rect x="73"  y="-51" width="22" height="7" fill="#D9835F"/>
-          <rect x="-15" y="-44" width="110" height="2" fill="#8B5A3C"/>
-          <g fill="#55555C">
-            <rect x="-11" y="-42" width="2" height="12"/>
-            <rect x="-6"  y="-30" width="2" height="14"/>
-            <rect x="0"   y="-16" width="2" height="16"/>
-            <rect x="89" y="-42" width="2" height="12"/>
-            <rect x="84" y="-30" width="2" height="14"/>
-            <rect x="78" y="-16" width="2" height="16"/>
+        <g transform="translate(18 -2)">
+          <g id="hearts" fill="#E06C9F">
+            <g class="heart heart-1">
+              <rect x="14" y="-14" width="3" height="3"/>
+              <rect x="20" y="-14" width="3" height="3"/>
+              <rect x="14" y="-11" width="9" height="3"/>
+              <rect x="17" y="-8" width="3" height="3"/>
+            </g>
+            <g class="heart heart-2">
+              <rect x="52" y="-12" width="3" height="3"/>
+              <rect x="58" y="-12" width="3" height="3"/>
+              <rect x="52" y="-9" width="9" height="3"/>
+              <rect x="55" y="-6" width="3" height="3"/>
+            </g>
           </g>
         </g>
-
-        <g id="ball">
-          <rect x="68" y="8" width="7.5" height="7.5" fill="#ECECEC"/>
-          <rect x="75.5" y="8" width="7.5" height="7.5" fill="#242320"/>
-          <rect x="68" y="15.5" width="7.5" height="7.5" fill="#242320"/>
-          <rect x="75.5" y="15.5" width="7.5" height="7.5" fill="#ECECEC"/>
-        </g>
-
-        <g id="laptop">
-          <g fill="#6E7987">
-            <rect x="86"   y="46" width="28" height="5"/>
-            <rect x="87.5" y="41" width="28" height="5"/>
-            <rect x="89"   y="36" width="28" height="5"/>
-            <rect x="90.5" y="31" width="28" height="5"/>
-            <rect x="92"   y="26" width="28" height="5"/>
-            <rect x="93.5" y="21" width="28" height="5"/>
-          </g>
-          <g fill="#F2F2F2">
-            <rect x="95" y="35" width="3" height="3"/>
-            <rect x="98" y="32" width="3" height="3"/>
-            <rect x="98" y="38" width="3" height="3"/>
-            <rect x="102" y="38" width="3" height="3"/>
-            <rect x="104" y="35" width="3" height="3"/>
-            <rect x="106" y="32" width="3" height="3"/>
-            <rect x="110" y="32" width="3" height="3"/>
-            <rect x="110" y="38" width="3" height="3"/>
-            <rect x="113" y="35" width="3" height="3"/>
-          </g>
-          <rect x="64" y="51" width="46" height="4" fill="#5B6B7A"/>
-          <g fill="#7C8CA0">
-            <rect x="66" y="52" width="4" height="2"/>
-            <rect x="72" y="52" width="4" height="2"/>
-            <rect x="78" y="52" width="4" height="2"/>
-            <rect x="84" y="52" width="4" height="2"/>
-            <rect x="90" y="52" width="4" height="2"/>
-            <rect x="96" y="52" width="4" height="2"/>
-            <rect x="102" y="52" width="4" height="2"/>
-          </g>
-        </g>
-
-        <g id="headphones">
-          <rect x="8" y="-2" width="64" height="6" fill="#3B3B42"/>
-          <rect x="2" y="4" width="10" height="14" fill="#A9CDC7"/>
-          <rect x="68" y="4" width="10" height="14" fill="#A9CDC7"/>
-        </g>
-        <g id="dj-table">
-          <rect x="6" y="34" width="68" height="6" fill="#55555C"/>
-          <rect x="16" y="26" width="14" height="10" fill="#3B7FC4"/>
-          <rect x="50" y="26" width="14" height="10" fill="#ECECEC"/>
-        </g>
-        <g id="notes">
-          <g class="note note-1" fill="#3B3B42">
-            <rect x="76" y="-4" width="2" height="9"/>
-            <rect x="72" y="2" width="4" height="4"/>
-            <rect x="76" y="-4" width="5" height="2"/>
+        <!-- the canopy hangs from the top of the wool (y=2.5) -->
+        <g transform="translate(0 2.5)">
+          <g id="parachute" shape-rendering="crispEdges">
+          <g class="chute-body">
+            <rect x="18" y="-54" width="12.8" height="6" fill="#F2D9B8"/>
+            <rect x="30.8" y="-54" width="18.4" height="6" fill="#D87656"/>
+            <rect x="49.2" y="-54" width="12.8" height="6" fill="#F2D9B8"/>
+            <rect x="4" y="-48" width="8.4" height="6" fill="#D87656"/>
+            <rect x="12.4" y="-48" width="18.4" height="6" fill="#F2D9B8"/>
+            <rect x="30.8" y="-48" width="18.4" height="6" fill="#D87656"/>
+            <rect x="49.2" y="-48" width="18.4" height="6" fill="#F2D9B8"/>
+            <rect x="67.6" y="-48" width="8.4" height="6" fill="#D87656"/>
+            <rect x="-6" y="-42" width="18.4" height="6" fill="#D87656"/>
+            <rect x="12.4" y="-42" width="18.4" height="6" fill="#F2D9B8"/>
+            <rect x="30.8" y="-42" width="18.4" height="6" fill="#D87656"/>
+            <rect x="49.2" y="-42" width="18.4" height="6" fill="#F2D9B8"/>
+            <rect x="67.6" y="-42" width="18.4" height="6" fill="#D87656"/>
+            <rect x="-4.5" y="-36" width="15.4" height="4" fill="#D87656"/>
+            <rect x="13.9" y="-36" width="15.4" height="4" fill="#F2D9B8"/>
+            <rect x="32.3" y="-36" width="15.4" height="4" fill="#D87656"/>
+            <rect x="50.7" y="-36" width="15.4" height="4" fill="#F2D9B8"/>
+            <rect x="69.1" y="-36" width="15.4" height="4" fill="#D87656"/>
+            <g>
+            <rect x="-4.4" y="-32" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="0.6" y="-24.25" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="5.6" y="-16.5" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="10.6" y="-8.75" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="13" y="-32" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="16" y="-24.25" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="19" y="-16.5" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="22" y="-8.75" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="30.4" y="-32" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="31.4" y="-24.25" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="32.4" y="-16.5" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="33.4" y="-8.75" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="47.8" y="-32" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="46.8" y="-24.25" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="45.8" y="-16.5" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="44.8" y="-8.75" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="65.2" y="-32" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="62.2" y="-24.25" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="59.2" y="-16.5" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="56.2" y="-8.75" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="82.6" y="-32" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="77.6" y="-24.25" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="72.6" y="-16.5" width="1.8" height="8.25" fill="#7B7B84"/>
+            <rect x="67.6" y="-8.75" width="1.8" height="8.25" fill="#7B7B84"/>
+            </g>
           </g>
         </g>
-        <g id="cup">
-          <g id="steam" fill="#ABABAB">
-            <rect x="76" y="1" width="1.5" height="3"/>
-            <rect x="77.5" y="-2" width="1.5" height="3"/>
-            <rect x="82" y="1" width="1.5" height="3"/>
-            <rect x="80.5" y="-2" width="1.5" height="3"/>
+        </g>
+        <g shape-rendering="crispEdges">
+          <!-- legs go up under the wool so a swinging leg never leaves a gap; evenly spaced under the fleece -->
+          <g class="leg leg-a" style="transform-origin: 13.75px 40px;">
+            <rect x="10" y="35" width="7.5" height="20" fill="#6E665F"/>
+            <rect x="10" y="51.25" width="7.5" height="3.75" fill="#403B37"/>
           </g>
-          <rect x="74" y="7" width="12" height="10" fill="#F2E9DC"/>
-          <rect x="76" y="7" width="8" height="2" fill="#4A2E1E"/>
-          <rect x="86" y="9" width="4" height="1.5" fill="#F2E9DC"/>
-          <rect x="88.5" y="9" width="1.5" height="5" fill="#F2E9DC"/>
-          <rect x="86" y="12.5" width="4" height="1.5" fill="#F2E9DC"/>
+          <g class="leg leg-b" style="transform-origin: 26.25px 40px;">
+            <rect x="22.5" y="35" width="7.5" height="20" fill="#6E665F"/>
+            <rect x="22.5" y="51.25" width="7.5" height="3.75" fill="#403B37"/>
+          </g>
+          <g class="leg leg-b" style="transform-origin: 38.75px 40px;">
+            <rect x="35" y="35" width="7.5" height="20" fill="#6E665F"/>
+            <rect x="35" y="51.25" width="7.5" height="3.75" fill="#403B37"/>
+          </g>
+          <g class="leg leg-a" style="transform-origin: 51.25px 40px;">
+            <rect x="47.5" y="35" width="7.5" height="20" fill="#6E665F"/>
+            <rect x="47.5" y="51.25" width="7.5" height="3.75" fill="#403B37"/>
+          </g>
+          <!-- wool: a stepped blob (top row and bottom-left pulled in); the bottom row runs on to the neck -->
+          <rect x="10" y="2.5" width="37.5" height="7.5" fill="#F4F0E6"/>
+          <rect x="2.5" y="10" width="52.5" height="22.5" fill="#F4F0E6"/>
+          <rect x="10" y="32.5" width="45" height="7.5" fill="#F4F0E6"/>
+          <rect x="5" y="13.75" width="7.5" height="3.75" fill="#E4DECE"/>
+          <rect x="20" y="16.25" width="7.5" height="3.75" fill="#E4DECE"/>
+          <rect x="36.25" y="13.75" width="7.5" height="3.75" fill="#E4DECE"/>
+          <rect x="26.25" y="5" width="7.5" height="3.75" fill="#E4DECE"/>
+          <rect x="10" y="25" width="7.5" height="3.75" fill="#E4DECE"/>
+          <rect x="32.5" y="27.5" width="7.5" height="3.75" fill="#E4DECE"/>
+          <rect x="46.25" y="22.5" width="7.5" height="3.75" fill="#E4DECE"/>
+          <rect x="10" y="36.25" width="45" height="3.75" fill="#E4DECE"/>
+          <!-- head, tuft, ears: the head stays above the ground so it does not read as a neck-and-leg column -->
+          <rect x="55" y="10" width="22.5" height="22.5" fill="#6E665F"/>
+          <rect x="57.5" y="5" width="17.5" height="7.5" fill="#F4F0E6"/>
+          <rect x="57.5" y="10" width="17.5" height="2.5" fill="#E4DECE"/>
+          <rect x="77.5" y="15" width="5" height="7.5" fill="#6E665F"/>
+          <rect x="50" y="15" width="5" height="7.5" fill="#6E665F"/>
+          <rect x="59" y="23.75" width="14.5" height="7.5" fill="#A59B90"/>
+          <rect x="63.75" y="25" width="5" height="3.75" fill="#403B37"/>
         </g>
-        <g id="think-bubble" fill="#F2F2F2">
-          <rect x="30" y="-28" width="20" height="14"/>
-          <rect x="26" y="-24" width="6" height="6"/>
-          <rect x="50" y="-24" width="6" height="6"/>
-          <rect x="34" y="-10" width="4" height="4"/>
-          <rect x="27" y="-4" width="3" height="3"/>
+        <g id="eyes-n">
+          <rect class="eye" x="59" y="15" width="5" height="5" fill="#F4F0E6"/>
+          <rect class="eye" x="68.5" y="15" width="5" height="5" fill="#F4F0E6"/>
         </g>
-        <rect id="head-zone" x="-17" y="-59" width="114" height="57" fill="transparent" pointer-events="all"/>
-      </g>
-      <g id="board">
-        <rect x="-6" y="52" width="92" height="8" fill="#C15F8B"/>
-        <rect x="-6" y="52" width="92" height="3" fill="#D488AC"/>
+        <g id="eyes-h" fill="#F4F0E6">
+          <rect x="57.75" y="17.5" width="2.5" height="2.5"/><rect x="60.25" y="15" width="2.5" height="2.5"/><rect x="62.75" y="17.5" width="2.5" height="2.5"/>
+          <rect x="67.25" y="17.5" width="2.5" height="2.5"/><rect x="69.75" y="15" width="2.5" height="2.5"/><rect x="72.25" y="17.5" width="2.5" height="2.5"/>
+        </g>
+        <g id="eyes-x" fill="#F4F0E6">
+          <rect x="57.75" y="15" width="2.5" height="2.5"/><rect x="62.75" y="15" width="2.5" height="2.5"/><rect x="60.25" y="17.5" width="2.5" height="2.5"/><rect x="57.75" y="20" width="2.5" height="2.5"/><rect x="62.75" y="20" width="2.5" height="2.5"/>
+          <rect x="67.25" y="15" width="2.5" height="2.5"/><rect x="72.25" y="15" width="2.5" height="2.5"/><rect x="69.75" y="17.5" width="2.5" height="2.5"/><rect x="67.25" y="20" width="2.5" height="2.5"/><rect x="72.25" y="20" width="2.5" height="2.5"/>
+        </g>
+        <g transform="translate(24 0)">
+          <g id="think-bubble" fill="#F2F2F2">
+            <rect x="30" y="-28" width="20" height="14"/>
+            <rect x="26" y="-24" width="6" height="6"/>
+            <rect x="50" y="-24" width="6" height="6"/>
+            <rect x="34" y="-10" width="4" height="4"/>
+            <rect x="27" y="-4" width="3" height="3"/>
+          </g>
+        </g>
+        <rect id="head-zone" x="55" y="5" width="27.5" height="27.5" fill="transparent" pointer-events="all"/>
       </g>
     </g>
   </script>

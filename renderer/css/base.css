@@ -98,8 +98,9 @@ body.preview #creature {
   animation: blink 0.25s steps(1) 1;
 }
 
+/* the cat's dark tail tip flicks up and down one cell, in whole steps */
 .tail {
-  animation: tail-wag 1.8s ease-in-out infinite;
+  animation: tail-flick 1.6s steps(1) infinite;
 }
 
 body.held .tail,
