@@ -11,7 +11,7 @@
   [![License](https://img.shields.io/github/license/jin3107/pixel-pet?style=flat-square)](LICENSE)
   [![Version](https://img.shields.io/badge/version-1.4.0-blue?style=flat-square)](package.json)
   [![Platform](https://img.shields.io/badge/platform-Windows-0078D6?style=flat-square&logo=windows&logoColor=white)](#requirements)
-  [![Electron](https://img.shields.io/badge/Electron-31-47848F?style=flat-square&logo=electron&logoColor=white)](https://www.electronjs.org/)
+  [![Electron](https://img.shields.io/badge/Electron-45-47848F?style=flat-square&logo=electron&logoColor=white)](https://www.electronjs.org/)
 </div>
 
 <br>
@@ -96,7 +96,7 @@ Workarounds, in order of preference:
 2. Or manually finish the install after `npm install`:
    ```powershell
    npm approve-scripts electron
-   Expand-Archive "$env:LOCALAPPDATA\electron\Cache\<hash>\electron-v31.7.7-win32-x64.zip" -DestinationPath "node_modules\electron\dist"
+   Expand-Archive "$env:LOCALAPPDATA\electron\Cache\<hash>\electron-v45.3.1-win32-x64.zip" -DestinationPath "node_modules\electron\dist"
    "electron.exe" | Out-File -NoNewline "node_modules\electron\path.txt"
    ```
 
