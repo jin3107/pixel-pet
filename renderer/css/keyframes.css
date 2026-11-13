@@ -29,9 +29,9 @@
   70%      { transform: scaleY(1); }
 }
 
-@keyframes tail-wag {
-  0%, 100% { transform: rotate(-6deg); }
-  50%      { transform: rotate(10deg); }
+@keyframes tail-flick {
+  0%   { translate: 0 0; }
+  50%  { translate: 0 7.5px; }
 }
 
 /* the pet rides the swell: up 2 units, down again, in whole steps (no rotation, so edges stay crisp) */
@@ -74,11 +74,6 @@
 @keyframes type-arm-r {
   0%   { transform: translateY(0); }
   50%  { transform: translateY(3px); }
-}
-
-@keyframes chute-sway {
-  0%, 100% { transform: rotate(-3deg); }
-  50%      { transform: rotate(3deg); }
 }
 
 /* coffee: cup offsets are relative to the cup's resting spot (x 74..86 + handle to 90, y 7..17) */

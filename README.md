@@ -43,10 +43,11 @@ except when you're actually touching the pet.
   trimmed set (`jump`, `climb`, `think`) since they don't have the
   laptop/DJ/soccer/coffee props drawn for them — the cat additionally gets a
   `butterfly` trick (crouches, tracks a fluttering butterfly, then pounces).
-- **Animated legs & tail on cat/sheep** — the hand-drawn cat/sheep sprites
-  have their painted-on legs (and, for the cat, its tail) clipped out of the
-  base artwork and re-attached as separate pieces so they can walk, dangle,
-  and wag independently instead of being frozen into the static image.
+- **Cat and sheep are built like Clawd** — hand-placed pixel rectangles on the
+  same grid (feet on the same ground line, facing right), not an image. Eyes,
+  legs and the cat's tail tip are separate pieces, so they walk, blink, dangle,
+  get happy `^ ^` eyes when patted and `X` eyes when dropped, and open a
+  parachute like Clawd does.
 - **Care-message bubble** — roughly once an hour, it pauses to "think" and
   pops up a small speech bubble above its head with a short check-in message
   (drink water, stretch, rest your eyes...). The bubble is its own overlay
@@ -131,7 +132,6 @@ renderer/
   settings.html/js       Settings window (name, greetings, interval)
   bubble.html            The speech-bubble overlay window
   bubble.js             Renders bubble text, reports its size back to main
-  img/                  cat.png / sheep.png — hand-drawn 48x48 Piskel sprites
   css/
     base.css            Layout, cursors, transform origins, hidden-groups
     states.css          One body.<state> block per state/trick

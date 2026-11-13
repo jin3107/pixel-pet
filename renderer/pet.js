@@ -42,9 +42,6 @@ function runPreview(apply) {
 async function init() {
   const model = previewModel || await window.petAPI.getModel();
   document.body.classList.add(`model-${model}`);
-  // Only the hand-drawn cat/sheep art faces left by default; the original
-  // Clawd sprite already faces right, so it needs no flip negation.
-  const facingSign = model === 'clawd' ? 1 : -1;
 
   // Use innerHTML on the SVG element so content is parsed in SVG namespace
   // (template elements parse SVG as HTML nodes — wrong namespace, won't render)
@@ -70,7 +67,8 @@ async function init() {
     document.body.classList.toggle('chute',   state.startsWith('fall') && state.includes('chute'));
     document.body.classList.toggle('scared',  state.startsWith('fall') && state.includes('scared'));
     document.body.classList.toggle('care-msg', !!careMsg);
-    flipGroup.style.transform = `scaleX(${facingSign * facing})`;
+    // Every sprite is drawn facing right, so facing = 1 is the unflipped pose.
+    flipGroup.style.transform = `scaleX(${facing})`;
   };
 
   if (previewModel) {

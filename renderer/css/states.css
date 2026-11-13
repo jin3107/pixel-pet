@@ -421,8 +421,6 @@ body.fall .arm-r {
 
 body.fall.chute #parachute {
   display: inline;
-  transform-origin: 40px -44px;
-  animation: chute-sway 1.2s ease-in-out infinite;
 }
 
 body.fall.chute .arm-l,
@@ -449,13 +447,14 @@ body.model-clawd.held .hf-b {
   animation: hang-foot-b 0.8s steps(1) infinite;
 }
 
-/* Clawd's parachute opens in stages after a short free fall, then bobs side to side in whole pixels */
-body.model-clawd.fall.chute #parachute {
+/* The parachute (every model) opens in stages after a short free fall, then bobs side to side in whole pixels. Each
+   template places it so (40, 0) in its own space is where the canopy attaches to the pet's back. */
+body.fall.chute #parachute {
   transform-origin: 40px 0;
   animation: chute-open 0.5s steps(1) 0.2s both;
 }
 
-body.model-clawd.fall.chute .chute-body {
+body.fall.chute .chute-body {
   animation: chute-bob 1.2s steps(1) 0.7s infinite;
 }
 
@@ -539,10 +538,15 @@ body.butterfly #bob-group {
   animation: pounce-cycle 2s ease-in-out infinite;
 }
 
-body.butterfly .leg-a {
+/* only the front paw swipes at the butterfly; the other legs stand still */
+body.butterfly .leg {
+  animation: none;
+}
+
+body.butterfly .paw {
   animation: paw-swipe 2s ease-in-out infinite;
 }
 
 body.butterfly .tail {
-  animation: tail-wag 0.6s ease-in-out infinite;
+  animation: tail-flick 0.5s steps(1) infinite;
 }
