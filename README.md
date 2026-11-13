@@ -1,171 +1,168 @@
 <div align="center">
-  <img src="renderer/app-icon.png" width="96" height="96" alt="pixel-pet icon" />
+  <img src="renderer/app-icon.png" width="96" height="96" alt="Pixel Pet icon" />
 
   # Pixel Pet
 
-  A tiny pixel-art desktop pet — pick Clawd, a cat, or a sheep — that lives
-  on your Windows desktop.
+  A pixel-art desktop pet for Windows. Pick Clawd, a cat or a sheep; it wanders
+  along your taskbar, reacts to you, does tricks, checks in on you now and then,
+  and can even use an LLM as a tiny brain.
 
+  [![Release](https://img.shields.io/github/v/release/jin3107/pixel-pet?style=flat-square)](https://github.com/jin3107/pixel-pet/releases/latest)
+  [![Downloads](https://img.shields.io/github/downloads/jin3107/pixel-pet/total?style=flat-square)](https://github.com/jin3107/pixel-pet/releases)
   [![Stars](https://img.shields.io/github/stars/jin3107/pixel-pet?style=flat-square)](https://github.com/jin3107/pixel-pet/stargazers)
-  [![Forks](https://img.shields.io/github/forks/jin3107/pixel-pet?style=flat-square)](https://github.com/jin3107/pixel-pet/network/members)
   [![License](https://img.shields.io/github/license/jin3107/pixel-pet?style=flat-square)](LICENSE)
-  [![Version](https://img.shields.io/badge/version-1.4.0-blue?style=flat-square)](package.json)
   [![Platform](https://img.shields.io/badge/platform-Windows-0078D6?style=flat-square&logo=windows&logoColor=white)](#requirements)
   [![Electron](https://img.shields.io/badge/Electron-45-47848F?style=flat-square&logo=electron&logoColor=white)](https://www.electronjs.org/)
+
+  <br>
+
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/showcase-dark.png">
+    <img alt="Clawd, the cat and the sheep in a grid of poses: standing, typing on a laptop, DJing, surfing, being petted, parachuting and more" src="docs/images/showcase-light.png" width="900">
+  </picture>
 </div>
 
 <br>
 
-On first launch it asks you to pick a companion — **Clawd** (the original
-pixel crab), a **cat**, or a **sheep** — then walks along the taskbar on its
-own, reacts to your mouse, and every so often breaks into a trick. Clawd's
-full trick list: sits down to type on a laptop, DJs with headphones and a
-turntable, heads a soccer ball, jumps, climbs up the screen and rappels back
-down, surfs across the taskbar on a board, sips a cup of coffee, or just
-stands there thinking. The cat and sheep stick to a calmer, on-model subset
-(jump, climb, think — the cat also chases a butterfly), skipping the
-laptop/DJ/soccer/coffee/surf props that don't fit them. Drop the pet mid-air
-and it free-falls — sometimes with a parachute, sometimes without.
+On first launch it asks which companion you want, then walks along the taskbar
+on its own and every so often breaks into a trick. Pick it up and drop it and it
+free-falls, sometimes with a parachute. It is a transparent, always-on-top,
+click-through window, so it never blocks what is underneath it.
 
-Built with Electron: transparent, frameless, always-on-top, and click-through
-except when you're actually touching the pet.
+## Download
 
-## Features
+Grab **`pixel-pet.exe`** from the [latest release](https://github.com/jin3107/pixel-pet/releases/latest)
+and run it. The installer is not code-signed, so Windows SmartScreen may warn
+you the first time ("More info", then "Run anyway"). The installed app starts
+with Windows; untick **Chạy cùng Windows** in the tray menu if you do not want that.
 
-- **Pick your pet** — a small picker window on first run (or whenever no
-  model is saved yet) lets you choose Clawd, cat, or sheep; the choice is
-  saved to `pet-config.json` and can be changed by clearing it.
-- **Autonomous wandering** — walks back and forth along the taskbar inside
-  `screen.getPrimaryDisplay().workArea`, so it never overlaps the taskbar.
-- **Random tricks, gated per model** — walking is the default behavior;
-  every so often it picks a trick. Clawd gets the full set: `code`, `music`,
-  `soccer`, `jump`, `climb`, `surf`, `think`, `coffee`. Cat and sheep get a
-  trimmed set (`jump`, `climb`, `think`) since they don't have the
-  laptop/DJ/soccer/coffee props drawn for them — the cat additionally gets a
-  `butterfly` trick (crouches, tracks a fluttering butterfly, then pounces).
-- **Cat and sheep are built like Clawd** — hand-placed pixel rectangles on the
-  same grid (feet on the same ground line, facing right), not an image. Eyes,
-  legs and the cat's tail tip are separate pieces, so they walk, blink, dangle,
-  get happy `^ ^` eyes when patted and `X` eyes when dropped, and open a
-  parachute like Clawd does.
-- **Care-message bubble** — roughly once an hour, it pauses to "think" and
-  pops up a small speech bubble above its head with a short check-in message
-  (drink water, stretch, rest your eyes...). The bubble is its own overlay
-  window, not an OS notification, so it still shows up even if system
-  notifications are turned off.
-- **Settings window** — rename the pet, toggle which care messages are
-  enabled, add your own custom ones, and adjust how often they pop up.
-- **AFK mode** — if your mouse sits still for a while, the pet wanders over
-  and hangs around your cursor instead of doing its own thing.
-- **Drag and drop** — click and hold the pet to pick it up, drop it anywhere
-  on screen; it free-falls and settles with a bounce, sometimes popping a
-  parachute on the way down.
-- **Pet the head** — hover over its head to see it react happily.
-- **Click-through by default** — the window only captures mouse input while
-  the cursor is directly over the sprite, so it never blocks clicks on
-  whatever is underneath it.
+> The interface text (tray menu, settings, the default check-in messages) is
+> currently in Vietnamese.
+
+## The pets
+
+| | Tricks |
+| --- | --- |
+| **Clawd** (the crab) | `code` (sits down to type on a laptop), `music` (DJs with headphones), `soccer` (juggles a ball), `surf` (rides a board along the taskbar), `coffee`, `jump`, `climb`, `think` |
+| **Cat** | `jump`, `climb`, `think`, and `butterfly` (crouches, tracks a butterfly, pounces) |
+| **Sheep** | `jump`, `climb`, `think` |
+
+All three are built the same way: hand-placed pixel rectangles on one grid (no
+images), so they blink, walk, dangle when picked up, get happy `^ ^` eyes when
+petted, `X` eyes when dropped, and open a parachute.
+
+Things you can do with the mouse:
+
+- **Hover its head** to pet it (hearts).
+- **Click and hold** to pick it up, drop it anywhere and watch it fall.
+- It **sidesteps your pointer** when you come close, and **walks over to your
+  cursor** if the mouse has been still for a while.
+
+## Screenshots
+
+### Choose your pet (with a live preview)
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/picker-dark.png">
+    <img alt="The pet picker: three cards for Clawd, cat and sheep with an animated preview of the selected one" src="docs/images/picker-light.png" width="460">
+  </picture>
+</p>
+
+Open it any time from the tray menu (**Đổi pet...**). Selecting a card shows the
+real sprite animating before you switch.
+
+### Settings
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/settings-general-dark.png">
+    <img alt="Settings, General tab: pet name, check-in messages and how often they appear" src="docs/images/settings-general-light.png" width="420">
+  </picture>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/settings-brain-dark.png">
+    <img alt="Settings, Mini brain tab: provider, model and API key" src="docs/images/settings-brain-light.png" width="420">
+  </picture>
+</p>
+
+### Check-ins
+
+<p align="center">
+  <img alt="Clawd with a speech bubble asking whether you have had water yet" src="docs/images/care-message.png" width="240">
+</p>
+
+About once an hour it pauses and shows a short check-in (drink water, stretch,
+rest your eyes...). The bubble is its own overlay window, not an OS
+notification, so it appears even if system notifications are off. You choose
+which messages are used, add your own, and set the interval in **Settings**.
+(If you turn on app awareness, below, it speaks at moments that fit what you are
+doing instead of on this timer.)
+
+## Optional features
+
+Both are **off by default**. Switch them on from the tray menu; Mini brain is
+also configured in **Settings**.
+
+### Notice what I am doing
+
+With **Pet quan sát app đang dùng** on, the pet reads the foreground window's
+process name and title every 30 seconds, using a one-shot PowerShell call. From
+that it works out a category (coding, chat, browsing, video, docs, game, ...),
+which it uses to:
+
+- mirror you: Clawd types on its laptop while you code and DJs while you listen
+  to music;
+- speak up at sensible moments instead of on a blind timer: when you come back
+  after a break, when you have been focused or scrolling for a long time, or
+  late at night. It stays quiet during games, video, music and fullscreen apps,
+  and never talks more than once every 25 minutes.
+
+What it keeps: a short timeline of app and category kept **in memory only**
+(nothing is written to disk, a restart starts fresh). Banking sites, password
+managers and private/incognito windows are reported as "private" with the title
+dropped. It never takes screenshots.
+
+### Mini brain
+
+With **Mini brain** on, an LLM picks the pet's next action and occasionally says
+a short line. It works with any OpenAI-compatible endpoint: Groq, Google Gemini,
+xAI, a local Ollama server (no key needed), or your own.
+
+- **Safe by construction:** the model can only choose among the actions that
+  pet actually has, and the normal behavior keeps running while it thinks. If it
+  is slow, offline, out of credit or answers badly, the pet simply carries on as
+  usual and retries later.
+- **What is sent:** the hour, the activity category (for example "coding"), the
+  pet's name, model and current action, and its last few choices. Never window
+  titles or app names.
+- **Your key:** pasted in Settings, it is encrypted with the OS (Electron
+  `safeStorage`) before it is saved and never shown again. The environment
+  variables `BRAIN_API_KEY` or `XAI_API_KEY` take precedence if set.
+- **Cost:** at most one short request every 30 seconds while it is on (it only
+  asks when the pet is ready for its next action). Free tiers exist at some
+  providers and change often, so check theirs.
+
+## Privacy
+
+Pixel Pet makes no network requests of its own unless you turn on **Mini brain**,
+and then only to the endpoint you chose. There is no telemetry. Settings live in
+`%APPDATA%\pixel-pet\pet-config.json`.
 
 ## Requirements
 
 - Windows
-- [Node.js](https://nodejs.org/) 18 or newer (20/22 LTS recommended — see the
-  Node 24 note below)
-
-## Getting started
-
-```bash
-git clone https://github.com/jin3107/pixel-pet.git
-cd pixel-pet
-npm install
-npm start
-```
-
-A tray icon appears; right-click it to switch pet (**Đổi pet...**), open settings, or choose **Exit** to quit.
-
-### Known issue: Node 24 + Electron install
-
-On Node 24, `npm install`'s Electron postinstall step can silently fail to
-extract `electron.exe` (you'll see only a `locales` folder under
-`node_modules/electron/dist`, and `npm start` fails with "Electron failed to
-install correctly"). This is an `extract-zip` incompatibility, not a network
-issue — the zip is already downloaded correctly into
-`%LOCALAPPDATA%\electron\Cache`.
-
-Workarounds, in order of preference:
-1. Use Node 20 or 22 LTS instead (easiest fix).
-2. Or manually finish the install after `npm install`:
-   ```powershell
-   npm approve-scripts electron
-   Expand-Archive "$env:LOCALAPPDATA\electron\Cache\<hash>\electron-v45.3.1-win32-x64.zip" -DestinationPath "node_modules\electron\dist"
-   "electron.exe" | Out-File -NoNewline "node_modules\electron\path.txt"
-   ```
-
-## Building a portable .exe
-
-```bash
-npm run dist
-```
-
-Outputs a Windows installer via `electron-builder` (see the `build` section
-in `package.json`).
-
-## Project structure
-
-```
-main.js               Electron main process — window creation, movement/state
-                       loop, drag/pat IPC handlers, care-message scheduling,
-                       model-picker/settings window creation, tray menu
-config.js             Loads/saves pet-config.json (petModel, petName,
-                       greetings, care-message interval)
-preload.js             contextBridge: exposes petAPI to the pet renderer
-bubblePreload.js        contextBridge: exposes bubbleAPI to the speech-bubble
-                       overlay renderer
-settingsPreload.js      contextBridge: exposes settingsAPI to the settings window
-modelPickerPreload.js   contextBridge: exposes modelPickerAPI to the model-picker window
-renderer/
-  index.html            One <svg id="creature"> mount point plus one
-                         <script type="text/svg-template" id="tpl-*"> per
-                         model (clawd/cat/sheep); pet.js swaps the right
-                         template's markup into #creature at startup
-  pet.js                Applies state classes, wires up drag/hover listeners
-  model-picker.html/js   First-run "choose your pet" window
-  settings.html/js       Settings window (name, greetings, interval)
-  bubble.html            The speech-bubble overlay window
-  bubble.js             Renders bubble text, reports its size back to main
-  css/
-    base.css            Layout, cursors, transform origins, hidden-groups
-    states.css          One body.<state> block per state/trick
-    keyframes.css        All @keyframes
-```
-
-The pet's behavior is a simple state machine driven by `main.js`'s `tick()`
-loop (runs every 30ms), broadcasting `{ state, facing, careMsg }` over IPC to
-the renderer, which just toggles CSS classes — all animation logic lives in
-`renderer/css/`. The speech bubble is a second, separate transparent
-`BrowserWindow` that main.js positions above the pet's head and shows/hides
-in lockstep with the `think` state.
-
-The cat/sheep sprites are static PNGs, so their legs (and the cat's tail)
-are cut out of the source art with an SVG `clip-path` and re-drawn as
-separate `<rect>`/`<image>` pieces positioned back in place — that's what
-lets `states.css` animate them (walk, dangle when held, wag, etc.) the same
-way it animates Clawd's rect-built legs.
 
 ## Contributing
 
-Issues and pull requests are welcome — new tricks, better animations, Linux/
-macOS support, whatever. A few things that help:
+Want to run it from source, build the installer or add a trick? See
+[CONTRIBUTING.md](CONTRIBUTING.md). To report a security problem, see
+[SECURITY.md](SECURITY.md).
 
-- Keep the sprite pixel-accurate: plain axis-aligned `<rect>` elements, no
-  `rx`/rounded corners, no smooth easing on movement (use `steps(1)` for
-  frame-swap style animation, not `ease-in-out`).
-- New tricks go in the `tricks` array in `nextAction()` (`main.js`); gate it
-  by `petConfig.petModel` if the trick needs props a model doesn't have, and
-  add a matching `body.<state>` block in `renderer/css/states.css`.
-- Test by running `npm start` and actually watching the pet on your desktop
-  before opening a PR — this is a visual project, screenshots/GIFs in the PR
-  description help a lot.
+## Credits and disclaimer
+
+Clawd is inspired by the pixel mascot of Claude. Pixel Pet is an independent fan
+project and is not affiliated with or endorsed by Anthropic.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE).
