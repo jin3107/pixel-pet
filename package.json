@@ -13,8 +13,8 @@
     "dist": "electron-builder --win nsis && node scripts/postbuild.js"
   },
   "devDependencies": {
-    "electron": "^31.0.0",
-    "electron-builder": "^24.13.3",
+    "electron": "^45.3.1",
+    "electron-builder": "^26.18.0",
     "rcedit": "^5.0.2"
   },
   "build": {
@@ -56,6 +56,6 @@
     }
   },
   "allowScripts": {
-    "electron@31.7.7": true
+    "electron@45.3.1": true
   }
 }

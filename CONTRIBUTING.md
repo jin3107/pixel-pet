@@ -35,7 +35,7 @@ Workarounds, in order of preference:
 2. Or finish the install by hand after `npm install`:
    ```powershell
    npm approve-scripts electron
-   Expand-Archive "$env:LOCALAPPDATA\electron\Cache\<hash>\electron-v31.7.7-win32-x64.zip" -DestinationPath "node_modules\electron\dist"
+   Expand-Archive "$env:LOCALAPPDATA\electron\Cache\<hash>\electron-v45.3.1-win32-x64.zip" -DestinationPath "node_modules\electron\dist"
    "electron.exe" | Out-File -NoNewline "node_modules\electron\path.txt"
    ```
 

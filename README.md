@@ -12,7 +12,7 @@
   [![Stars](https://img.shields.io/github/stars/jin3107/pixel-pet?style=flat-square)](https://github.com/jin3107/pixel-pet/stargazers)
   [![License](https://img.shields.io/github/license/jin3107/pixel-pet?style=flat-square)](LICENSE)
   [![Platform](https://img.shields.io/badge/platform-Windows-0078D6?style=flat-square&logo=windows&logoColor=white)](#requirements)
-  [![Electron](https://img.shields.io/badge/Electron-31-47848F?style=flat-square&logo=electron&logoColor=white)](https://www.electronjs.org/)
+  [![Electron](https://img.shields.io/badge/Electron-45-47848F?style=flat-square&logo=electron&logoColor=white)](https://www.electronjs.org/)
 
   <br>
 
