@@ -19,6 +19,24 @@
   const STATIONARY = new Set(['idle', 'jump', 'code', 'music', 'soccer', 'pat', 'think', 'coffee', 'butterfly']);
   const STATES = ['walk', 'idle', 'surf', 'climb', 'code', 'jump', 'music', 'soccer', 'held', 'fall', 'pat', 'think', 'coffee', 'butterfly'];
 
+  // Seated coding (Clawd), frame-accurate to the desktop sprite: hard-cut poses in this order. A stationary tick is 150 ms
+  // and burns 5 frames, so frames = 5 per tick. The CSS builds each pose from the cp-* class and these group classes.
+  const CODE_PHASES = ['prep', 'raise', 'hold', 'swing', 'land', 'ears', 'sit', 'typing', 'up', 'carry', 'away', 'relax'];
+  const CODE_GROUPS = {
+    'cs-seated': new Set(['sit', 'typing', 'up']),
+    'cs-shade': new Set(['ears', 'sit', 'typing', 'up', 'carry']),
+    'cs-look': new Set(['sit', 'typing', 'up', 'carry']),
+    'cs-open': new Set(['land', 'ears', 'sit', 'typing', 'up']),
+  };
+  const CODE_NEXT = {
+    prep: 'raise', raise: 'hold', hold: 'swing', swing: 'land', land: 'ears', ears: 'sit', sit: 'typing',
+    typing: 'up', up: 'carry', carry: 'away', away: 'relax',
+  };
+  const CODE_PHASE_FRAMES = {
+    prep: 15, raise: 5, hold: 10, swing: 5, land: 5, ears: 5, sit: 5, up: 5, carry: 5, away: 10, relax: 5,
+  };
+  const codePhaseFrames = (phase) => (phase === 'typing' ? 250 + Math.random() * 250 : CODE_PHASE_FRAMES[phase]);
+
   const stage = document.getElementById('stage');
   const petRoot = document.getElementById('pet-root');
   const creature = document.getElementById('creature');
@@ -40,9 +58,6 @@
   document.body.classList.add(`model-${model}`);
   const tplEl = document.getElementById(`tpl-${model}`) || document.getElementById('tpl-clawd');
   creature.innerHTML = tplEl.textContent;
-  // Only the hand-drawn cat/sheep art faces left by default; the original
-  // Clawd sprite already faces right, so it needs no flip negation.
-  const facingSign = model === 'clawd' ? 1 : -1;
 
   const flipGroup = document.getElementById('flip-group');
   const headZone = document.getElementById('head-zone');
@@ -73,7 +88,7 @@
   let state = 'idle';
   let frames = 60;
   let climbPhase = 'up';
-  let codePhase = 'typing';
+  let codePhase = 'prep';
   let coffeePhase = 'lift';
   let fallChute = false;
   let fallScared = false;
@@ -125,8 +140,8 @@
     switch (trick) {
       case 'code':
         state = 'code';
-        codePhase = 'typing';
-        frames = 250 + Math.random() * 250;
+        codePhase = 'prep';
+        frames = codePhaseFrames('prep');
         break;
       case 'coffee':
         state = 'coffee';
@@ -172,12 +187,16 @@
       s.startsWith('fall') ? 'fall' : s;
     STATES.forEach((st) => document.body.classList.toggle(st, st === base));
     document.body.classList.toggle('hang', s === 'climb-pause');
-    document.body.classList.toggle('closing', s === 'code-closing');
+    // One class per seated-coding phase (cp-prep ... cp-relax); states.css builds the sequence from them.
+    CODE_PHASES.forEach((p) => document.body.classList.toggle(`cp-${p}`, s === `code-${p}`));
+    const phase = s.startsWith('code-') ? s.slice(5) : '';
+    Object.entries(CODE_GROUPS).forEach(([cls, phases]) => document.body.classList.toggle(cls, phases.has(phase)));
     document.body.classList.toggle('sipping', s === 'coffee-sip');
     document.body.classList.toggle('chute', s.startsWith('fall') && s.includes('chute'));
     document.body.classList.toggle('scared', s.startsWith('fall') && s.includes('scared'));
     document.body.classList.toggle('care-msg', !!careMsg);
-    flipGroup.style.transform = `scaleX(${facingSign * f})`;
+    // Every sprite is drawn facing right, so facing = 1 is the unflipped pose.
+    flipGroup.style.transform = `scaleX(${f})`;
   }
 
   function tick() {
@@ -246,9 +265,9 @@
       frames -= scheduledDelay / FAST_MS;
       if (frames <= 0) {
         if (state === 'idle') nextAction();
-        else if (state === 'code' && codePhase === 'typing') {
-          codePhase = 'closing';
-          frames = 12;
+        else if (state === 'code' && CODE_NEXT[codePhase]) {
+          codePhase = CODE_NEXT[codePhase];
+          frames = codePhaseFrames(codePhase);
         } else if (state === 'coffee' && coffeePhase === 'lift') {
           coffeePhase = 'sip';
           frames = 200 + Math.random() * 150;
@@ -341,6 +360,20 @@
 
   function hideBubble() {
     bubbleWrap.classList.remove('show');
+    bubbleText.style.transform = '';
+  }
+
+  // The bubble is centred over the pet. Standing near an edge of the box that would push it out of view, so slide only the
+  // text box back in (the tail stays centred over the pet).
+  function placeBubble() {
+    bubbleText.style.transform = '';
+    const margin = 4;
+    const r = bubbleText.getBoundingClientRect();
+    const s = stage.getBoundingClientRect();
+    let dx = 0;
+    if (r.left < s.left + margin) dx = s.left + margin - r.left;
+    else if (r.right > s.right - margin) dx = s.right - margin - r.right;
+    if (dx) bubbleText.style.transform = `translateX(${Math.round(dx)}px)`;
   }
 
   function showCareMessage() {
@@ -352,6 +385,7 @@
     careBubbleActive = true;
     bubbleText.textContent = msg;
     bubbleWrap.classList.add('show');
+    placeBubble();
   }
 
   function scheduleCareMessage() {

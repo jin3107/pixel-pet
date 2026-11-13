@@ -28,6 +28,13 @@ body.held #creature {
   cursor: grabbing;
 }
 
+/* Model picker preview: same sprite at 2x, not interactive. */
+body.preview #creature {
+  width: 200px;
+  height: 130px;
+  cursor: default;
+}
+
 #flip-group {
   transform-origin: 40px 20px;
   transition: transform 0.15s ease-out;
@@ -57,7 +64,12 @@ body.held #creature {
 }
 
 #board,
+#sea-back,
+#sea-front,
 #laptop,
+#torso-shade,
+#sit-legs,
+#hang-legs,
 #hearts,
 #eyes-h,
 #eyes-x,
@@ -73,6 +85,9 @@ body.held #creature {
 }
 
 .eye {
+  /* Scale around the eye itself. Without fill-box the origin is the centre of the whole SVG viewBox, so a blink
+     (scaleY) dragged the eyes down toward the legs instead of squashing them in place. */
+  transform-box: fill-box;
   transform-origin: center;
   translate: 0 0;
   scale: 1 1;
@@ -80,11 +95,12 @@ body.held #creature {
 }
 
 .eye.blinking {
-  animation: blink 0.25s ease-in-out 1;
+  animation: blink 0.25s steps(1) 1;
 }
 
+/* the cat's dark tail tip flicks up and down one cell, in whole steps */
 .tail {
-  animation: tail-wag 1.8s ease-in-out infinite;
+  animation: tail-flick 1.6s steps(1) infinite;
 }
 
 body.held .tail,
