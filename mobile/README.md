@@ -43,7 +43,9 @@ Trick pool cũng gate theo model y hệt desktop (`engine.js`, hàm `nextAction(
 - **Mèo**: `jump`, `climb`, `think`, cộng thêm `butterfly` (rình rồi vồ một con bướm bay lượn).
 - **Cừu**: `jump`, `climb`, `think`.
 
-Chân (và đuôi của mèo) được cắt ra từ `cat.png`/`sheep.png` gốc bằng `clip-path` rồi ghép lại thành mảnh riêng animate được — xem chi tiết kỹ thuật ở [README gốc](../README.md#project-structure).
+Cả ba con đều là các hình chữ nhật pixel đặt tay trên cùng một lưới (không còn dùng ảnh PNG), quay mặt sang phải và đứng trên cùng một đường mặt đất. Mắt (thường, cười `^ ^` khi vuốt, `X` khi rơi), 4 chân, đuôi mèo và dù là các mảnh riêng nên animate được như bản desktop. Hai template mèo/cừu và ba file CSS là bản **sao nguyên** của desktop (`renderer/index.html`, `renderer/css/`); chi tiết quy ước lưới ở [CONTRIBUTING gốc](../CONTRIBUTING.md#guidelines).
+
+`engine.js` có đủ 12 pha của trick `code` (đứng, nhấc laptop, đặt xuống, ngồi gõ phím, đứng dậy...) và bật/tắt class giống `renderer/pet.js` của desktop (`cp-*`, `cs-*`, `sipping`, `chute`, `scared`...).
 
 ## Project structure
 
@@ -74,7 +76,8 @@ src/
 - Không có màn hình "chọn pet lần đầu" riêng như desktop — gộp thẳng vào Settings cho gọn, vì app không có khái niệm first-run wall.
 - Đổi `petModel` trong Settings sẽ làm WebView remount (nháy một chút) — chấp nhận được vì template chỉ chọn một lần lúc engine boot, không hot-swap sống được.
 - Không có AFK/dodge theo con trỏ chuột (không có khái niệm cursor trên mobile) — luôn dùng trick pool ngẫu nhiên.
-- Chưa test thật trên thiết bị Android/iOS — mới verify bằng cách dựng lại đúng string `PET_HTML` và mở trong trình duyệt. Báo lại nếu chạy qua Expo Go bị khác.
+- Chưa test thật trên thiết bị Android/iOS. Bản này chỉ được kiểm bằng cách chạy chính chuỗi `PET_HTML` (đúng khung 260×170, cài đặt đưa vào như `WidgetBox.js`) trong Chromium của Electron: ép từng trick chạy qua `nextAction()`, bắn chuột thật để vuốt đầu / kéo thả, và thử lời nhắc. Báo lại nếu chạy qua Expo Go bị khác.
+- CSS dùng các thuộc tính transform riêng lẻ (`translate`, `scale`, `rotate`: cần Android System WebView / Chrome 104 trở lên) và `x`/`y`/`width`/`height` đặt qua CSS trên thẻ SVG (tư thế tay của trick `code` và `coffee`). Android WebView theo Chrome nên hỗ trợ; **iOS (WKWebView) chưa kiểm chứng**, hai trick đó có thể hiện tay sai vị trí. Máy cũ chưa cập nhật WebView có thể hiện pet sai hoặc đứng yên.
 
 ## Contributing
 
