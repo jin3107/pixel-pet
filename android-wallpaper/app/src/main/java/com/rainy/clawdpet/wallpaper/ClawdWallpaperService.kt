@@ -25,11 +25,6 @@ private const val EXTRA_BOTTOM_MARGIN_DP = 110f
 // constant, so Kotlin won't allow `const` here.
 private val BACKDROP_COLOR = Color.parseColor("#EAE6DF")
 
-// Rough head-zone box in local units — matches renderer/index.html's
-// #head-zone rect (x=10,y=0,w=60,h=20) relative to the pet's origin.
-private val HEAD_ZONE_X = 10f..70f
-private val HEAD_ZONE_Y = 0f..20f
-
 class ClawdWallpaperService : WallpaperService() {
     override fun onCreateEngine(): Engine = PetEngine()
 
@@ -50,6 +45,7 @@ class ClawdWallpaperService : WallpaperService() {
     inner class PetEngine : Engine() {
 
         private val state = PetState()
+        private var sprite: ModelSprite = PetSprites.forModel(null)
         private val handler = Handler(Looper.getMainLooper())
         private var visible = false
         private var lastFrameAt = 0L
@@ -74,6 +70,7 @@ class ClawdWallpaperService : WallpaperService() {
         private var insetBottom = 0
 
         private val prefsListener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+            sprite = PetSprites.forModel(PetPrefs.getPetModel(this@ClawdWallpaperService))
             loadBackdrop()
             scheduleCareMessage()
         }
@@ -112,6 +109,7 @@ class ClawdWallpaperService : WallpaperService() {
             // taps, not full drag sequences — that's a launcher limitation,
             // not something this engine can work around.
             setTouchEventsEnabled(true)
+            sprite = PetSprites.forModel(PetPrefs.getPetModel(this@ClawdWallpaperService))
             PetPrefs.registerListener(this@ClawdWallpaperService, prefsListener)
             scheduleCareMessage()
         }
@@ -180,11 +178,14 @@ class ClawdWallpaperService : WallpaperService() {
             val ly = (event.y - insetTop) / scale
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    val petLocalX = lx - state.currentX
-                    val petLocalY = ly - state.currentY
-                    val overPet = petLocalX in 0f..PetSprite.WIDTH && petLocalY in 0f..PetSprite.HEIGHT
+                    // box coordinates, un-mirrored when the pet faces left, then into sprite-local units
+                    val boxX = lx - state.currentX
+                    val boxY = ly - state.currentY
+                    val overPet = boxX in 0f..PetSprite.WIDTH && boxY in 0f..PetSprite.HEIGHT
                     if (!overPet) return
-                    val onHead = petLocalX in HEAD_ZONE_X && petLocalY in HEAD_ZONE_Y
+                    val spriteX = (if (state.facing < 0f) PetSprite.WIDTH - boxX else boxX) - PetSprite.ORIGIN_X
+                    val spriteY = boxY - PetSprite.ORIGIN_Y
+                    val onHead = sprite.headZone.contains(spriteX, spriteY)
                     if (onHead) {
                         state.setPatting(true)
                     } else {
@@ -274,10 +275,7 @@ class ClawdWallpaperService : WallpaperService() {
                 canvas.translate(insetLeft.toFloat(), insetTop.toFloat())
                 canvas.scale(scale, scale)
                 canvas.translate(state.currentX, state.currentY)
-                if (state.facing < 0f) {
-                    canvas.scale(-1f, 1f, PetSprite.WIDTH / 2f, 0f)
-                }
-                PetRenderer.draw(canvas, state)
+                PetRenderer.draw(canvas, state, sprite)
                 canvas.restore()
 
                 val msg = state.currentMessage

@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Same rects/colors as PetSprite.kt's torso+eyes, just repositioned into
-     the adaptive icon's 108x108 canvas (legs dropped — too fine-grained to
-     read at launcher-icon size). -->
+<!-- Clawd exactly as in the desktop app-icon: the tpl-clawd rects (torso, arms, four legs, eyes) in sprite units,
+     scaled by 0.72 and centred in the adaptive icon's 108x108 canvas so the whole sprite sits inside the 66dp safe
+     zone. Sprite centre is (40, 27.5): translate = 54 - centre * 0.72. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path
-        android:fillColor="#D9835F"
-        android:pathData="M24,33 h60 v40 h-60 Z" />
-    <path
-        android:fillColor="#242320"
-        android:pathData="M30,39 h8 v8 h-8 Z" />
-    <path
-        android:fillColor="#242320"
-        android:pathData="M70,39 h8 v8 h-8 Z" />
+    <group
+        android:translateX="25.2"
+        android:translateY="34.2"
+        android:scaleX="0.72"
+        android:scaleY="0.72">
+        <path
+            android:fillColor="#D87656"
+            android:pathData="M10,0 h60 v40 h-60 Z
+                              M-5,14 h15 v13 h-15 Z
+                              M70,14 h15 v13 h-15 Z
+                              M10,40 h7.5 v15 h-7.5 Z
+                              M25,40 h7.5 v15 h-7.5 Z
+                              M47.5,40 h7.5 v15 h-7.5 Z
+                              M62.5,40 h7.5 v15 h-7.5 Z" />
+        <path
+            android:fillColor="#000000"
+            android:pathData="M17.5,6 h7.5 v7.5 h-7.5 Z
+                              M55,6 h7.5 v7.5 h-7.5 Z" />
+    </group>
 </vector>

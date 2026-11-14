@@ -4,6 +4,10 @@
     <string name="set_wallpaper_button">Đặt làm hình nền</string>
     <string name="home_hint">Đặt xong, về home screen sẽ thấy pet đi lại. Mở app khác sẽ che nó lại — đúng như yêu cầu.</string>
     <string name="background_hint">Live wallpaper sẽ thay hình nền hiện tại của bạn. Chọn ảnh nền đang dùng ở dưới để không bị mất — pet sẽ chạy trên đúng ảnh đó.</string>
+    <string name="pet_model_label">Chọn pet</string>
+    <string name="model_clawd">Clawd</string>
+    <string name="model_cat">Mèo</string>
+    <string name="model_sheep">Cừu</string>
     <string name="pick_background_button">Chọn ảnh nền</string>
     <string name="change_background_button">Đổi ảnh nền</string>
     <string name="clear_background_button">Bỏ ảnh nền</string>

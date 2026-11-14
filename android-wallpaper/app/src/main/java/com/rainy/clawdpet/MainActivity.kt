@@ -8,7 +8,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,7 +43,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rainy.clawdpet.wallpaper.ClawdWallpaperService
+import com.rainy.clawdpet.wallpaper.ModelSprite
 import com.rainy.clawdpet.wallpaper.PetPrefs
+import com.rainy.clawdpet.wallpaper.PetRenderer
+import com.rainy.clawdpet.wallpaper.PetSprite
+import com.rainy.clawdpet.wallpaper.PetSprites
+import com.rainy.clawdpet.wallpaper.PetState
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,6 +120,8 @@ private fun HomeScreen(onSetWallpaper: () -> Unit, onOpenSettings: () -> Unit) {
             textAlign = TextAlign.Center,
         )
 
+        ModelPicker()
+
         OutlinedButton(onClick = { pickImage.launch(arrayOf("image/*")) }) {
             Text(
                 text = if (backgroundUri == null) {
@@ -132,6 +146,58 @@ private fun HomeScreen(onSetWallpaper: () -> Unit, onOpenSettings: () -> Unit) {
 
         Button(onClick = onSetWallpaper) {
             Text(text = stringResource(R.string.set_wallpaper_button))
+        }
+    }
+}
+
+/** Three cards (Clawd / cat / sheep) drawn from the same sprite data the wallpaper uses. */
+@Composable
+private fun ModelPicker() {
+    val context = LocalContext.current
+    var selected by remember { mutableStateOf(PetPrefs.getPetModel(context)) }
+    val names = mapOf(
+        "clawd" to stringResource(R.string.model_clawd),
+        "cat" to stringResource(R.string.model_cat),
+        "sheep" to stringResource(R.string.model_sheep),
+    )
+
+    Text(text = stringResource(R.string.pet_model_label), style = MaterialTheme.typography.labelLarge)
+    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        for (id in PetPrefs.PET_MODELS) {
+            val isSelected = id == selected
+            Column(
+                modifier = Modifier
+                    .border(
+                        width = if (isSelected) 2.dp else 1.dp,
+                        color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                        shape = RoundedCornerShape(8.dp),
+                    )
+                    .clickable {
+                        selected = id
+                        PetPrefs.setPetModel(context, id)
+                    }
+                    .padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                SpritePreview(PetSprites.forModel(id))
+                Text(text = names.getValue(id), style = MaterialTheme.typography.labelMedium)
+            }
+        }
+    }
+}
+
+@Composable
+private fun SpritePreview(sprite: ModelSprite) {
+    // A fresh PetState is IDLE at t=0, facing right: the resting pose.
+    val state = remember { PetState() }
+    Canvas(modifier = Modifier.size(width = 80.dp, height = 54.dp)) {
+        val s = size.width / PetSprite.WIDTH
+        drawIntoCanvas { canvas ->
+            val native = canvas.nativeCanvas
+            native.save()
+            native.scale(s, s)
+            PetRenderer.draw(native, state, sprite)
+            native.restore()
         }
     }
 }

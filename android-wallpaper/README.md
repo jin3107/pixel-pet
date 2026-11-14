@@ -2,7 +2,7 @@
 
 Pet sống ngay sau icon ở home screen, tự bị app khác/bong bóng chat che khi mở lên (cơ chế mặc định của live wallpaper, không phải overlay always-on-top).
 
-**v1.1** — xem lịch sử thay đổi ở cuối file.
+**v1.2** — xem lịch sử thay đổi ở cuối file.
 
 ## Mở project
 
@@ -21,10 +21,10 @@ Project viết tay ban đầu (chưa có Gradle wrapper), Android Studio đã t�
 
 ## Dùng app
 
-1. Mở app → 3 nhóm nút: **Chọn ảnh nền** (tuỳ chọn), **Cài đặt** (tên pet/câu chào/khoảng nhắc), **Đặt làm hình nền**.
+1. Mở app → **Chọn pet** (Clawd / Mèo / Cừu, đổi là áp dụng ngay), rồi 3 nút: **Chọn ảnh nền** (tuỳ chọn), **Cài đặt** (tên pet/câu chào/khoảng nhắc), **Đặt làm hình nền**.
 2. Bấm "Đặt làm hình nền" → Android hiện màn xác nhận **của hệ thống** (không phải app tự vẽ, không cách nào bỏ qua bước này — quy định bảo mật OS) → Set wallpaper.
 3. Về home screen: pet đi lại/nhảy ngẫu nhiên, thỉnh thoảng hiện bong bóng câu chào theo lịch đã cấu hình. Mở app khác → bị che. Quay về home → vẫn còn đó.
-4. Kéo pet bằng ngón tay → thả ra → rơi xuống. Chạm giữ vùng đầu → pet vuốt ve (tim bay).
+4. Kéo pet bằng ngón tay → thả ra → rơi xuống (ngẫu nhiên có dù và/hoặc mắt hoảng). Chạm giữ vùng đầu → pet vuốt ve (tim bay).
 
 ### Về việc mất hình nền cũ
 
@@ -32,7 +32,8 @@ Live wallpaper **chiếm đúng slot hình nền** của máy — không có cá
 
 ## Biết trước — giới hạn hiện tại
 
-- **6 state**: idle, walk, jump, held (kéo), fall (thả), pat (vuốt đầu), think (câu chào). Chưa có code/coffee/music/soccer/climb/surf/parachute.
+- **7 state**: idle, walk, jump, held (kéo), fall (thả, có dù/mắt hoảng), pat (vuốt đầu), think (câu chào) + chớp mắt. Chưa có code/coffee/music/soccer/climb/surf/butterfly (mèo cũng chưa có butterfly).
+- **Sprite sinh tự động** từ `renderer/index.html` của bản desktop: sửa `tpl-clawd/cat/sheep` rồi chạy `node scripts/generate-sprites.js` → ghi lại `PetSprites.kt` (đừng sửa tay file đó).
 - **Kéo-thả phụ thuộc launcher**: đã bật `setTouchEventsEnabled(true)`, nhưng không phải launcher nào cũng forward đủ chuỗi touch move cho live wallpaper — một số chỉ gửi tap. Giới hạn của launcher, không sửa được từ phía app.
 - **Chưa build/test bằng máy dev** — code viết dựa trên đọc kỹ API, build/test thật đều do user tự làm qua Android Studio. Báo lại nếu có lỗi biên dịch.
 - **Kích thước pet**: `PET_SCREEN_FRACTION` trong `ClawdWallpaperService.kt` (đang 0.18 ≈ 18% chiều ngang màn hình).
@@ -40,5 +41,6 @@ Live wallpaper **chiếm đúng slot hình nền** của máy — không có cá
 
 ## Lịch sử thay đổi
 
+- **v1.2**: làm lại theo desktop 1.8.1 — 3 model (Clawd, Mèo, Cừu) có chọn trong app; sprite sinh từ `index.html` thay vì chép tay; animation bám sát `states.css`/`keyframes.css` (arm sway, hop mượt, chân đung đưa khi bị kéo, chân treo của Clawd, dù, mắt hoảng, đuôi mèo, chớp mắt); vùng đầu để vuốt theo từng model.
 - **v1.1**: thêm màn Settings (tên pet, câu chào, khoảng nhắc) + `Mode.THINK` hiện bong bóng thoại thật; nút chọn ảnh nền để giữ hình nền cũ; trừ system-bar insets + khoảng đệm đáy để pet không kẹt dưới nav bar/dock launcher; thu pet nhỏ lại (0.30 → 0.18); icon app pixel-art (adaptive icon).
 - **v1.0**: bản đầu — pet roam tự do trên home screen dạng live wallpaper, kéo-thả/pat qua touch, tự dừng khi bị app khác che.

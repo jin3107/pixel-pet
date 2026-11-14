@@ -1,85 +1,68 @@
 package com.rainy.clawdpet.wallpaper
 
-import android.graphics.Color
-
 /**
- * Every coordinate below is copied 1:1 from the `<rect>` list in the desktop
- * app's renderer/index.html (SVG viewBox "-52 -54 184 120"). Local sprite
- * units, NOT screen pixels — PetEngine scales+translates this whole space
- * onto the wallpaper's real canvas each frame.
- *
- * v1 only ports the base body + eyes + hearts (idle/walk/jump/held/fall/pat).
- * Props tied to skipped tricks (laptop, headphones, dj-table, ball, cup,
- * parachute, think-bubble, surfboard) are intentionally left out — see the
- * plan file for the full list of what's deferred.
+ * Data model for the sprites in PetSprites.kt (auto-generated from the desktop app's
+ * renderer/index.html by scripts/generate-sprites.js). Coordinates are the desktop
+ * template's own "local sprite units"; PetRenderer maps them into the pet's box.
  */
 data class SpriteRect(val x: Float, val y: Float, val w: Float, val h: Float, val color: Int)
 
+/** A rectangle in local sprite units (used for the touch "head" zone). */
+data class Zone(val x: Float, val y: Float, val w: Float, val h: Float) {
+    fun contains(px: Float, py: Float) = px >= x && px <= x + w && py >= y && py <= y + h
+}
+
+/** Clawd's legs while held by the scruff: [upper] stays put, [foot] swings sideways. */
+data class HangLeg(val upper: SpriteRect, val foot: SpriteRect, val isA: Boolean)
+
+/** One piece of a sprite, in draw order. */
+sealed class Layer {
+    /** Rects that never move on their own (body, head, ears, wool...). */
+    class Fixed(val rects: List<SpriteRect>) : Layer()
+
+    /** Where the current eye set (normal / happy / scared) is drawn. */
+    object Eyes : Layer()
+
+    /** A leg (one or more rects) that swings about its hip. [isA] picks the walk phase. */
+    class Leg(val rects: List<SpriteRect>, val pivotX: Float, val pivotY: Float, val isA: Boolean) : Layer()
+
+    /** The cat's dark tail tip, which flicks one cell down and up. */
+    class Tail(val rects: List<SpriteRect>) : Layer()
+
+    /** Clawd's arm, rotated about its shoulder. */
+    class Arm(val rect: SpriteRect, val pivotX: Float, val pivotY: Float, val left: Boolean) : Layer()
+}
+
+class ModelSprite(
+    val id: String,
+    val layers: List<Layer>,
+    val eyesNormal: List<SpriteRect>,
+    val eyesHappy: List<SpriteRect>,
+    val eyesScared: List<SpriteRect>,
+    val hangLegs: List<HangLeg>,
+    val headZone: Zone,
+    /** Translate applied to the hearts (they sit above the head, which differs per model). */
+    val heartsDx: Float,
+    val heartsDy: Float,
+    /** Where the parachute attaches to the pet's back, and its vertical stretch. */
+    val chuteDy: Float,
+    val chuteScaleY: Float,
+)
+
+/**
+ * The pet's box. The box is what PetState moves around and what touch hit-testing uses; sprite local
+ * coordinates map into it with `box = local + ORIGIN`. Local x = 40 is the mirror axis, so the box is
+ * symmetric about its middle (x = 50) and a facing flip never moves the pet.
+ */
 object PetSprite {
-    private fun c(hex: String) = Color.parseColor(hex)
-
-    val torso = SpriteRect(10f, 0f, 60f, 40f, c("#D9835F"))
-
-    val eyesNormal = listOf(
-        SpriteRect(16f, 6f, 8f, 8f, c("#242320")),
-        SpriteRect(56f, 6f, 8f, 8f, c("#242320")),
-    )
-    val eyesHappy = listOf(
-        SpriteRect(15f, 10f, 4f, 4f, c("#242320")),
-        SpriteRect(19f, 6f, 4f, 4f, c("#242320")),
-        SpriteRect(23f, 10f, 4f, 4f, c("#242320")),
-        SpriteRect(55f, 10f, 4f, 4f, c("#242320")),
-        SpriteRect(59f, 6f, 4f, 4f, c("#242320")),
-        SpriteRect(63f, 10f, 4f, 4f, c("#242320")),
-    )
-    val eyesScared = listOf(
-        SpriteRect(16f, 6f, 4f, 4f, c("#242320")),
-        SpriteRect(16f, 14f, 4f, 4f, c("#242320")),
-        SpriteRect(22f, 10f, 4f, 4f, c("#242320")),
-        SpriteRect(60f, 6f, 4f, 4f, c("#242320")),
-        SpriteRect(60f, 14f, 4f, 4f, c("#242320")),
-        SpriteRect(54f, 10f, 4f, 4f, c("#242320")),
-    )
-
-    val legColor = c("#C46F4D")
-    // x positions match renderer/index.html's .leg-a/.leg-b rects — index
-    // 0,2 are "leg-a", 1,3 are "leg-b" (alternate during walk/dangle).
-    val legX = floatArrayOf(10f, 27.4f, 44.8f, 62.2f)
-    const val legY = 40f
-    const val legW = 7.8f
-    const val legH = 15f
-
-    val armColor = c("#D9835F")
-    const val armY = 14f
-    const val armW = 17f
-    const val armH = 12f
-    const val armLX = -7f
-    const val armRX = 70f
-    // Pivot points used by base.css's .arm-l / .arm-r transform-origin —
-    // rotation for arm-flap/arm-sway pivots around these, not the rect corner.
-    const val armLPivotX = 10f
-    const val armRPivotX = 70f
-    const val armPivotY = 20f
-
-    val heartColor = c("#E06C9F")
-    val heart1 = listOf(
-        SpriteRect(14f, -14f, 3f, 3f, heartColor),
-        SpriteRect(20f, -14f, 3f, 3f, heartColor),
-        SpriteRect(14f, -11f, 9f, 3f, heartColor),
-        SpriteRect(17f, -8f, 3f, 3f, heartColor),
-    )
-    val heart2 = listOf(
-        SpriteRect(52f, -12f, 3f, 3f, heartColor),
-        SpriteRect(58f, -12f, 3f, 3f, heartColor),
-        SpriteRect(52f, -9f, 9f, 3f, heartColor),
-        SpriteRect(55f, -6f, 3f, 3f, heartColor),
-    )
-
-    // Whole-sprite local bounding box, matches desktop's PET_W/PET_H.
     const val WIDTH = 100f
-    const val HEIGHT = 65f
-    // #bob-group transform-origin from base.css — breathe/hop/sway scale
-    // and rotate around this point, not the canvas origin.
+    const val HEIGHT = 68f
+    const val ORIGIN_X = 10f
+    const val ORIGIN_Y = 10f
+    /** Local y of the feet; the box extends HEIGHT - (FEET_Y + ORIGIN_Y) below them. */
+    const val FEET_Y = 55f
+
+    /** #bob-group transform-origin from base.css. */
     const val BOB_PIVOT_X = 40f
     const val BOB_PIVOT_Y = 40f
 }
