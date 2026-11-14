@@ -4,12 +4,10 @@ import kotlin.math.abs
 import kotlin.random.Random
 
 /**
- * Trimmed port of mobile/src/widget/assets/pet-web/engine.js's tick() state
- * machine (itself ported from desktop main.js). v1 only implements the
- * states needed to "live and roam the home screen": IDLE, WALK, JUMP, HELD
- * (finger drag), FALL (release), PAT (tap-hold the head). The full trick
- * roster (code/coffee/music/soccer/climb/surf) is a deferred fast-follow —
- * see the plan file.
+ * Trimmed port of the desktop main.js tick() state machine: the states needed to live and roam the home
+ * screen. IDLE, WALK, JUMP, HELD (finger drag), FALL (release, sometimes with a parachute and/or scared
+ * eyes), PAT (press-hold the head), THINK (care message). The desktop-only tricks (code/music/soccer/
+ * surf/climb/coffee/butterfly) are not ported.
  */
 enum class Mode { IDLE, WALK, JUMP, HELD, FALL, PAT, THINK }
 
@@ -25,8 +23,25 @@ class PetState {
     var modeElapsedMs = 0f
         private set
 
+    /** Monotonic clock for animations that run regardless of mode (the cat's tail flick). */
+    var clockMs = 0f
+        private set
+
     var currentMessage: String? = null
         private set
+
+    /** Chosen per fall, like the desktop's fallChute / fallScared. */
+    var fallChute = false
+        private set
+    var fallScared = false
+        private set
+
+    /** 0.25 for the middle of a blink, 1 otherwise (blink = 250ms, steps(1): closed from 30% to 70%). */
+    val blinkScale: Float
+        get() = if (blinkElapsedMs in 75f..175f) 0.25f else 1f
+
+    private var blinkElapsedMs = -1f
+    private var nextBlinkInMs = nextBlinkDelay()
 
     private var targetX = 0f
     private var framesLeft = 60f
@@ -47,6 +62,7 @@ class PetState {
             currentY = baseY()
         } else {
             currentX = clampX(currentX)
+            if (mode != Mode.HELD && mode != Mode.FALL) currentY = baseY()
         }
     }
 
@@ -71,6 +87,8 @@ class PetState {
         if (!dragging) return
         dragging = false
         vy = 0f
+        fallChute = Random.nextFloat() < 0.35f
+        fallScared = Random.nextFloat() < 0.5f
         setMode(Mode.FALL)
     }
 
@@ -117,17 +135,35 @@ class PetState {
         }
     }
 
+    private fun nextBlinkDelay() = 3500f + Random.nextFloat() * 4000f
+
+    private fun tickBlink(deltaMs: Float) {
+        if (blinkElapsedMs >= 0f) {
+            blinkElapsedMs += deltaMs
+            if (blinkElapsedMs >= 250f) {
+                blinkElapsedMs = -1f
+                nextBlinkInMs = nextBlinkDelay()
+            }
+        } else {
+            nextBlinkInMs -= deltaMs
+            if (nextBlinkInMs <= 0f) blinkElapsedMs = 0f
+        }
+    }
+
     /** Advance the simulation by [deltaMs]. Call once per frame (~30ms). */
     fun tick(deltaMs: Float) {
         tickN++
         modeElapsedMs += deltaMs
+        clockMs += deltaMs
+        tickBlink(deltaMs)
         val by = baseY()
 
         when {
             dragging -> { /* position already driven by moveDrag() */ }
 
             mode == Mode.FALL -> {
-                vy += 0.9f
+                // with a parachute the fall is slow and capped, like desktop main.js
+                if (fallChute) vy = (vy + 0.15f).coerceAtMost(1.6f) else vy += 0.9f
                 currentY += vy
                 currentX = clampX(currentX)
                 if (currentY >= by) {
@@ -136,7 +172,7 @@ class PetState {
                 }
             }
 
-            patting && mode in setOf(Mode.IDLE, Mode.WALK, Mode.JUMP, Mode.PAT) -> {
+            patting && (mode == Mode.IDLE || mode == Mode.WALK || mode == Mode.JUMP || mode == Mode.PAT) -> {
                 setMode(Mode.PAT)
                 currentY = by
             }
@@ -178,7 +214,8 @@ class PetState {
     companion object {
         const val PET_W = PetSprite.WIDTH
         const val PET_H = PetSprite.HEIGHT
-        const val GROUND_PAD = 4f
+        /** Box bottom sits this far below the feet-on-ground line (box y of the feet = HEIGHT - GROUND_PAD). */
+        const val GROUND_PAD = PetSprite.HEIGHT - (PetSprite.FEET_Y + PetSprite.ORIGIN_Y)
         const val WALK_SPEED = 3.2f
         const val FAST_MS = 30f
     }

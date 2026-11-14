@@ -19,6 +19,11 @@ object PetPrefs {
     private const val KEY_INTERVAL_MIN = "interval_min_min"
     private const val KEY_INTERVAL_MAX = "interval_max_min"
 
+    private const val KEY_PET_MODEL = "pet_model"
+
+    const val DEFAULT_PET_MODEL = "clawd"
+    val PET_MODELS = listOf("clawd", "cat", "sheep")
+
     const val DEFAULT_PET_NAME = "Clawd Pet"
     const val DEFAULT_INTERVAL_MIN = 60
     const val DEFAULT_INTERVAL_MAX = 75
@@ -40,6 +45,13 @@ object PetPrefs {
 
     fun setBackgroundUri(context: Context, uri: String?) {
         prefs(context).edit().putString(KEY_BACKGROUND_URI, uri).apply()
+    }
+
+    fun getPetModel(context: Context): String =
+        prefs(context).getString(KEY_PET_MODEL, DEFAULT_PET_MODEL)?.takeIf { it in PET_MODELS } ?: DEFAULT_PET_MODEL
+
+    fun setPetModel(context: Context, model: String) {
+        prefs(context).edit().putString(KEY_PET_MODEL, model).apply()
     }
 
     fun getPetName(context: Context): String =
